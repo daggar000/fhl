@@ -1,0 +1,41 @@
+{
+    "solution": {
+        "teamsAppTenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+        "subscriptionId": "6e007163-28ab-48d9-af19-4382829fabb8",
+        "subscriptionName": "IDC Special Clouds",
+        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+        "needCreateResourceGroup": false,
+        "resourceGroupName": "cosmic-test-ni",
+        "location": "southcentralus",
+        "resourceNameSuffix": "b65bdf",
+        "provisionSucceeded": true
+    },
+    "fx-resource-appstudio": {
+        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+        "teamsAppId": "38acd3d7-70a7-4be5-b2b2-0cf77f9deb86",
+        "teamsAppUpdatedAt": 1659364263199
+    },
+    "fx-resource-identity": {
+        "identityName": "helloworlddevb65bdf",
+        "identityResourceId": "/subscriptions/6e007163-28ab-48d9-af19-4382829fabb8/resourceGroups/cosmic-test-ni/providers/Microsoft.ManagedIdentity/userAssignedIdentities/helloworlddevb65bdf",
+        "identityClientId": "7028f1a8-df89-41c8-abdc-409589cf2e88"
+    },
+    "fx-resource-bot": {
+        "botId": "117d1883-de96-4da3-89ac-dc49c3f93557",
+        "botPassword": "{{fx-resource-bot.botPassword}}",
+        "objectId": "0566ab7f-3da7-498e-8d41-7cfdd1a37746",
+        "skuName": "B1",
+        "siteName": "helloworlddevb65bdfbot",
+        "validDomain": "helloworlddevb65bdfbot.azurewebsites.net",
+        "appServicePlanName": "helloworlddevb65bdfbot",
+        "botWebAppResourceId": "/subscriptions/6e007163-28ab-48d9-af19-4382829fabb8/resourceGroups/cosmic-test-ni/providers/Microsoft.Web/sites/helloworlddevb65bdfbot",
+        "siteEndpoint": "https://helloworlddevb65bdfbot.azurewebsites.net"
+    },
+    "fx-resource-frontend-hosting": {
+        "domain": "helloworlddevb65bdftab.z21.web.core.windows.net",
+        "endpoint": "https://helloworlddevb65bdftab.z21.web.core.windows.net",
+        "indexPath": "/index.html#",
+        "storageResourceId": "/subscriptions/6e007163-28ab-48d9-af19-4382829fabb8/resourceGroups/cosmic-test-ni/providers/Microsoft.Storage/storageAccounts/helloworlddevb65bdftab"
+    },
+    "fx-resource-api-connector": {}
+}

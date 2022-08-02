@@ -1,0 +1,30 @@
+{
+    "appName": "HelloWorldBot",
+    "version": "2.1.0",
+    "isFromSample": true,
+    "solutionSettings": {
+        "name": "fx-solution-azure",
+        "version": "1.0.0",
+        "hostType": "Azure",
+        "azureResources": [],
+        "capabilities": [
+            "Bot"
+        ],
+        "activeResourcePlugins": [
+            "fx-resource-frontend-hosting",
+            "fx-resource-identity",
+            "fx-resource-bot",
+            "fx-resource-local-debug",
+            "fx-resource-appstudio",
+            "fx-resource-api-connector"
+        ]
+    },
+    "programmingLanguage": "typescript",
+    "pluginSettings": {
+        "fx-resource-bot": {
+            "host-type": "app-service",
+            "capabilities": []
+        }
+    },
+    "projectId": "8570e9a9-f312-43e6-8979-821607f24444"
+}
