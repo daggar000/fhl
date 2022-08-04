@@ -160,8 +160,8 @@ class Tab extends React.Component {
     }
     let url = window.location.origin;
     console.log("url=" + url);
-    let reponse = await axios.post('http://localhost:3978/api/sendAgenda', publishData, config);
-    //let reponse = await axios.post(`${window.location.origin}/api/sendAgenda`, publishData, config);
+   let reponse = await axios.post('http://localhost:3978/api/sendAgenda', publishData, config);
+   //let reponse = await axios.post('https://helloworlddevb65bdfbot.azurewebsites.net/api/sendAgenda', publishData, config);
     return reponse;
   }
 }
