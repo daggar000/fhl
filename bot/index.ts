@@ -46,7 +46,7 @@ adapter.onTurnError = onTurnErrorHandler;
 var corsMiddleware = require('restify-cors-middleware');
 var cors = corsMiddleware({
   preflightMaxAge: 5,
-  origins: ['*'],
+  origins: ['https://helloworlddevb65bdftab.z21.web.core.windows.net'],
   allowHeaders: ['*'],
   allowMethods: ['*'],
   exposeHeaders: ['*']
@@ -55,6 +55,14 @@ var cors = corsMiddleware({
 
 // Create HTTP server.
 const server = restify.createServer();
+// server.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   res.header("Access-Control-Allow-Methods", "*");
+//   res.send(200);
+//   return next();
+// });  
+
 // server.use(restify.CORS());
 
 // server.opts(/.*/, function (req,res,next) {
@@ -65,8 +73,8 @@ const server = restify.createServer();
 //     return next();
 // });
 
-server.pre(cors.preflight);
-server.use(cors.actual);
+ server.pre(cors.preflight);
+ server.use(cors.actual);
 
 
 
