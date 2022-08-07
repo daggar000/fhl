@@ -27,17 +27,37 @@ export class TeamsBot extends TeamsActivityHandler {
     this.onMessage(async (context, next) => {
       console.log("Running with Message Activity.");
 
-      
-      const a =  context;
-  
+      let txt = context.activity.text;
+      const removedMentionText = TurnContext.removeRecipientMention(context.activity);
+      if (removedMentionText) {
+        // Remove the line break
+        txt = removedMentionText.toLowerCase().replace(/\n|\r/g, "").trim();
+      }
 
+      // Trigger command by IM text
+      switch (txt) {
+        case "welcome": {
+          const card = AdaptiveCards.declareWithoutData(rawWelcomeCard).render();
+          await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
+          break;
+        }
+        case "learn": {
+          this.likeCountObj.likeCount = 0;
+          const card = AdaptiveCards.declare<DataInterface>(rawLearnCard).render(this.likeCountObj);
+          await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
+          break;
+        }
 
-      
+        case "new": {
+          await context.sendActivity(`Add your response here!`);
+          break;
+        }
 
-      // // By calling next() you ensure that the next BotHandler is run.
+      }
+
+      // By calling next() you ensure that the next BotHandler is run.
       await next();
     });
-    
 
     this.onMembersAdded(async (context, next) => {
       const membersAdded = context.activity.membersAdded;

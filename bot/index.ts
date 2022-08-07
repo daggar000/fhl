@@ -42,11 +42,12 @@ const onTurnErrorHandler = async (context: TurnContext, error: Error) => {
 adapter.onTurnError = onTurnErrorHandler;
 
 // Create the bot that will handle incoming messages.
+const bot = new TeamsBot();
 
 var corsMiddleware = require('restify-cors-middleware');
 var cors = corsMiddleware({
   preflightMaxAge: 5,
-  origins: ['https://helloworlddevb65bdftab.z21.web.core.windows.net'],
+  origins: ['*'],
   allowHeaders: ['*'],
   allowMethods: ['*'],
   exposeHeaders: ['*']
@@ -55,28 +56,9 @@ var cors = corsMiddleware({
 
 // Create HTTP server.
 const server = restify.createServer();
-// server.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   res.header("Access-Control-Allow-Methods", "*");
-//   res.send(200);
-//   return next();
-// });  
-
-// server.use(restify.CORS());
-
-// server.opts(/.*/, function (req,res,next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Methods", req.header("Access-Control-Request-Method"));
-//     res.header("Access-Control-Allow-Headers", req.header("Access-Control-Request-Headers"));
-//     res.send(200);
-//     return next();
-// });
 
  server.pre(cors.preflight);
  server.use(cors.actual);
-
-
 
 server.listen(process.env.port || process.env.PORT || 3978, () => {
   console.log(`\nBot Started, ${server.name} listening to ${server.url}`);
@@ -84,8 +66,13 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
 server.use(bodyParser.json()); // for parsing application/json
 server.use(bodyParser.urlencoded({ extended: true }));
 
-
+console.log("bot deployed");
 server.post("/api/sendAgenda", Controller.syncAppData);
 // Listen for incoming requests.
 
+server.post("/api/messages", async (req, res) => {
+  await adapter.processActivity(req, res, async (context) => {
+    await bot.run(context);
+  });
+});
 

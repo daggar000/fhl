@@ -5,6 +5,9 @@ import './App.css';
 import { Button, Flex } from '@fluentui/react-northstar'
 import axios from 'axios';
 import './tab.css';
+import { Input } from '@fluentui/react-northstar'
+import { Divider } from '@fluentui/react-northstar'
+import { CallVideoIcon, TeamCreateIcon, AccessibilityIcon, CallPstnIcon, GlassesIcon, LightningIcon, CustomerHubIcon, DoorArrowLeftIcon } from '@fluentui/react-icons-northstar'
 
 class Tab extends React.Component {
   constructor(props) {
@@ -36,7 +39,7 @@ class Tab extends React.Component {
       localStorage.setItem("count", 0);
     return (
       <div align="left">
-        <table width="250px">
+        <table width="200px" >
           <tbody>
             {/* <tr>
               <td align="left">
@@ -47,46 +50,37 @@ class Tab extends React.Component {
               </td>
             </tr> */}
             <tr>
-              <td align="center">
-                To Take a short Break (5-10 mins).
+              <td align="left">
+                <div id="buttons" stlye="float: left;">
+                  <Button onClick={this.beRightBack} icon={<DoorArrowLeftIcon />} text content="Break!" />
+                </div>
+
               </td>
-              <td align="center">
-                Incase if you want to join another meeting.
+              <td align="left">
+                <div id="buttons" stlye="float: left;">
+
+                  <Button onClick={this.meetingSwitch} icon={<CallPstnIcon />} text content="Another Meeting!" />
+                </div>
               </td>
             </tr>
             <tr>
-              <td align="center">
+              <td align="left">
                 <div id="buttons" stlye="float: left;">
-                  <Flex gap="gap.smaller">
-                    <Button onClick={this.beRightBack}>
-                      Take a Break!
-                    </Button>
-                  </Flex>
+                  <Button onClick={this.customReason} icon={<CustomerHubIcon />} text content="Custom" />
                 </div>
-                {/* <label class="switch">
-                  <input type="checkbox" />
-                  <span class="slider round"></span>
-                </label> */}
               </td>
-              <td>
-                <div id="buttons">
-                  <Flex gap="gap.smaller">
-                    <Button onClick={this.meetingSwitch}>
-                      Another Meeting
-                    </Button>
-                  </Flex>
-                  {/* <label class="switch">
-                    <input type="checkbox"/>
-                    <span class="slider round"></span>
-                  </label> */}
+              <td >
+                <div id="buttons" stlye="float: left;" >
+                  <form action="/action_page.php">
+                    <Input type="text" id="fname" placeholder="your message?"></Input>
+                  </form>
                 </div>
               </td>
             </tr>
             <tr >
               <td colSpan="2">
                 <br></br>
-                <h6>Below is the list of members who are on break:</h6>
-                <hr></hr>
+                <Divider content="List of members who are AFK:" />
               </td>
             </tr>
             <tr >
@@ -94,6 +88,8 @@ class Tab extends React.Component {
                 <table id="brb-list" width="100%">
 
                 </table>
+
+                
               </td>
             </tr>
           </tbody>
@@ -102,30 +98,40 @@ class Tab extends React.Component {
     );
   }
 
+  customReason = () => {
+    var list2 = document.getElementById("brb-list")
+    if (list2) {
+      var customReason = document.getElementById("fname").value;
+      const userPrincipleName = this.state.context['userPrincipalName'] ?? "";
+      const meetingID = this.state.context['meetingId'] ?? "";
+      this.syncFunction(userPrincipleName, "custom", meetingID, customReason);
+    }
+  }
   beRightBack = () => {
     var list2 = document.getElementById("brb-list")
     if (list2) {
       const userPrincipleName = this.state.context['userPrincipalName'] ?? "";
-      this.syncApp(userPrincipleName, "TeaBreak").then(response => {
-        const brbList = response.data;
-        const personsObject = JSON.parse(brbList);
-        let myMap = new Map(Object.entries(personsObject));
-        this.populateUI(myMap);
-      });
+      const meetingID = this.state.context['meetingId'] ?? "";
+      this.syncFunction(userPrincipleName, "teaBreak", meetingID, "");
     }
   }
   meetingSwitch = () => {
     var list2 = document.getElementById("brb-list")
     if (list2) {
       const userPrincipleName = this.state.context['userPrincipalName'] ?? "";
-      this.syncApp(userPrincipleName, "meetingSwitch").then(response => {
-        const brbList = response.data;
-        const personsObject = JSON.parse(brbList);
-        let myMap = new Map(Object.entries(personsObject));
-        this.populateUI(myMap);
-      });
+      const meetingID = this.state.context['meetingId'] ?? "";
+      this.syncFunction(userPrincipleName, "meetingSwitch", meetingID, "");
     }
   }
+  syncFunction(userPrincipleName, breakType, meetingID, desc) {
+    this.syncApp(userPrincipleName, breakType, meetingID, desc).then(response => {
+      const brbList = response.data;
+      let myMap = new Map(Object.entries(brbList));
+      this.populateUI(myMap);
+    });
+  }
+
+
 
   populateUI(BRBMap) {
     var list2 = document.getElementById("brb-list");
@@ -140,29 +146,42 @@ class Tab extends React.Component {
   createRow(BRBName, breakTypeValue) {
     const row = document.createElement("tr");
     const name = document.createElement("td");
-    const breakType = document.createElement("td");
+    const breakTypeEle = document.createElement("td");
 
     name.innerHTML = BRBName;
-    breakType.innerHTML = breakTypeValue;
+    breakTypeEle.innerHTML = this.getUIBreakContent(breakTypeValue);
     row.appendChild(name);
-    row.appendChild(breakType);
+    row.appendChild(breakTypeEle);
     return row;
   }
 
-  async syncApp(userPrincipleName, breakType) {
+  getUIBreakContent(breakTypeValue) {
+    const breakType = breakTypeValue.split("::");
+    if (breakType[0] === 'custom') {
+      return breakType[1];
+    }
+    else if (breakType[0] === 'meetingSwitch') {
+      return "has joined another meeting";
+    }
+    else {
+      return "is out for small break!";
+    }
+  }
+  
+  async syncApp(userPrincipleName, breakTypeValue, meetingID, descr) {
 
     const agendaValue = userPrincipleName.replace('@microsoft.com', '');
-    var publishData = { name: agendaValue, breaktype: breakType };
+    var publishData = { name: agendaValue, breaktype: breakTypeValue, meetingid: meetingID, desc: descr };
     let config = {
       headers: {
         "Content-Type": "application/json",
       }
     }
-    let url = window.location.origin;
-    console.log("sending data to : https://helloworlddevb65bdfbot.azurewebsites.net/api/sendAgenda");
-   //let reponse = await axios.post('http://localhost:3978/api/sendAgenda', publishData, config);
-   let reponse = await axios.post('https://helloworlddevb65bdfbot.azurewebsites.net/api/sendAgenda', publishData, config);
+    //let reponse = await axios.post('http://localhost:7071/api/Function1', publishData, config);
+    let reponse = await axios.post('https://timebreakapp20220806210728.azurewebsites.net/api/Function1', publishData, config);
+
+    console.log(reponse.data);
     return reponse;
   }
-}     
+}
 export default Tab;

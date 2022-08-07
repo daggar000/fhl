@@ -1,5 +1,3 @@
-const e = require("cors");
-
 const emptyMap = new Map();
 syncAppData = (req, res) => {
 
