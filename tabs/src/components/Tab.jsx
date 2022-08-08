@@ -7,7 +7,7 @@ import axios from 'axios';
 import './tab.css';
 import { Input } from '@fluentui/react-northstar'
 import { Divider } from '@fluentui/react-northstar'
-import { CallVideoIcon, TeamCreateIcon, AccessibilityIcon, CallPstnIcon, GlassesIcon, LightningIcon, CustomerHubIcon, DoorArrowLeftIcon } from '@fluentui/react-icons-northstar'
+import {  CallPstnIcon, CustomerHubIcon, DoorArrowLeftIcon } from '@fluentui/react-icons-northstar'
 
 class Tab extends React.Component {
   constructor(props) {
@@ -33,8 +33,14 @@ class Tab extends React.Component {
 
   render() {
     // this.publishAgenda();
+    console.log("version 3.1");
     const meetingID = this.state.context['meetingId'] ?? "";
     this.syncFunction("","",meetingID,"");
+
+    const interval = setInterval(() => {
+      this.syncFunction("","",meetingID,"");
+    }, 5000);
+
     return (
       <div align="left">
         <table width="200px" >
@@ -175,8 +181,8 @@ class Tab extends React.Component {
         "Content-Type": "application/json",
       }
     }
-    let reponse = await axios.post('http://localhost:7071/api/Function1', publishData, config);
-    //let reponse = await axios.post('https://timebreakapp20220806210728.azurewebsites.net/api/Function1', publishData, config);
+    //let reponse = await axios.post('http://localhost:7071/api/Function1', publishData, config);
+    let reponse = await axios.post('https://timebreakapp20220806210728.azurewebsites.net/api/Function1', publishData, config);
 
     console.log(reponse.data);
     return reponse;
