@@ -33,10 +33,8 @@ class Tab extends React.Component {
 
   render() {
     // this.publishAgenda();
-    console.log(localStorage.getItem("key"));
-    localStorage.setItem("key", "default");
-    if (!localStorage.getItem("key"))
-      localStorage.setItem("count", 0);
+    const meetingID = this.state.context['meetingId'] ?? "";
+    this.syncFunction("","",meetingID,"");
     return (
       <div align="left">
         <table width="200px" >
@@ -167,7 +165,7 @@ class Tab extends React.Component {
       return "is out for small break!";
     }
   }
-  
+
   async syncApp(userPrincipleName, breakTypeValue, meetingID, descr) {
 
     const agendaValue = userPrincipleName.replace('@microsoft.com', '');
@@ -177,8 +175,8 @@ class Tab extends React.Component {
         "Content-Type": "application/json",
       }
     }
-    //let reponse = await axios.post('http://localhost:7071/api/Function1', publishData, config);
-    let reponse = await axios.post('https://timebreakapp20220806210728.azurewebsites.net/api/Function1', publishData, config);
+    let reponse = await axios.post('http://localhost:7071/api/Function1', publishData, config);
+    //let reponse = await axios.post('https://timebreakapp20220806210728.azurewebsites.net/api/Function1', publishData, config);
 
     console.log(reponse.data);
     return reponse;
